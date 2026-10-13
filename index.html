@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>正在跳转 · 四川信息职业技术学院</title>
+  <link rel="preconnect" href="https://www.scitc.edu.cn/" crossorigin>
+  <link rel="dns-prefetch" href="https://www.scitc.edu.cn/">
+  <style>
+    :root {
+      --t: 9.2s;
+      --ratio: 2.35;
+      --ink: #f7f1e6;
+      --muted: rgba(247, 241, 230, 0.62);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #100818;
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(680px 480px at 50% 46%, rgba(88, 42, 140, 0.28), transparent 68%),
+        #100818;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+    }
+
+    body.play::before { animation: vignette var(--t) linear forwards; }
+
+    .stage {
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .zoom {
+      position: relative;
+      z-index: 2;
+      width: min(980px, 88vw, calc(54vh * var(--ratio)));
+      aspect-ratio: 2.35 / 1;
+      transform-origin: center center;
+      will-change: transform, filter;
+    }
+
+    body.play .zoom { animation: cover var(--t) linear forwards; }
+
+    .halo,
+    .slot {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: calc(100% / var(--ratio));
+      border-radius: 50%;
+    }
+
+    .halo {
+      z-index: 0;
+      filter: blur(26px);
+      opacity: 0;
+      transform: scale(1.08);
+    }
+
+    .halo.gold {
+      left: -2%;
+      background: radial-gradient(circle, rgba(255, 196, 64, 0.95), rgba(255, 160, 40, 0.15) 68%, transparent 72%);
+    }
+
+    .halo.violet {
+      right: -2%;
+      background: radial-gradient(circle, rgba(168, 92, 255, 0.9), rgba(90, 30, 160, 0.2) 68%, transparent 72%);
+    }
+
+    body.play .halo.gold { animation: haloLeft var(--t) linear forwards; }
+    body.play .halo.violet { animation: haloRight var(--t) linear forwards; }
+
+    .slot {
+      overflow: hidden;
+      background: #fff;
+      opacity: 0;
+      will-change: transform, filter;
+    }
+
+    .slot.left {
+      left: 0;
+      z-index: 1;
+      box-shadow:
+        0 0 0 3px rgba(255, 214, 110, 0.9),
+        0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .slot.right {
+      right: 0;
+      z-index: 2;
+      box-shadow:
+        0 0 0 3px rgba(214, 176, 255, 0.92),
+        0 18px 40px rgba(0, 0, 0, 0.28);
+      mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 5%, #000 12%, #000 100%);
+      mask-size: 250% 100%;
+      mask-repeat: no-repeat;
+      mask-position: 100% 50%;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 5%, #000 12%, #000 100%);
+      -webkit-mask-size: 250% 100%;
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: 100% 50%;
+    }
+
+    .slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .slot.left img { transform: scale(1.14); }
+    .slot.right img { transform: scale(1.05); }
+
+    body.play .slot.left { animation: leftFuse var(--t) linear forwards; }
+    body.play .slot.right { animation: rightFuse var(--t) linear forwards; }
+
+    .sheen {
+      position: absolute;
+      top: -8%;
+      bottom: -8%;
+      left: 0;
+      width: 8%;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 226, 150, 0.2) 28%,
+        rgba(255, 255, 255, 0.72) 50%,
+        rgba(196, 140, 255, 0.28) 72%,
+        transparent 100%);
+      filter: blur(7px);
+    }
+
+    body.play .sheen { animation: sheen var(--t) linear forwards; }
+
+    .flare {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      width: 28%;
+      height: 90%;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle, rgba(255, 252, 245, 0.95) 0%, rgba(255, 214, 120, 0.45) 36%, transparent 70%);
+      filter: blur(6px);
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    body.play .flare { animation: flare var(--t) linear forwards; }
+
+    .caption {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 6.5vh;
+      z-index: 5;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .caption span {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.48em;
+      text-indent: 0.48em;
+      color: var(--muted);
+    }
+
+    .caption strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(20px, 3vw, 36px);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-indent: 0.14em;
+    }
+
+    .line {
+      display: block;
+      width: min(168px, 42vw);
+      height: 2px;
+      margin: 14px auto 0;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      overflow: hidden;
+    }
+
+    .line b {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ffc857, #d7a4ff);
+    }
+
+    body.play .caption { animation: caption var(--t) linear forwards; }
+    body.play .line b { animation: grow var(--t) linear forwards; }
+
+    .fallback {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 2vh;
+      z-index: 6;
+      text-align: center;
+      color: rgba(247, 241, 230, 0.46);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    .fallback:hover { color: #fff; }
+    body.play .fallback { animation: caption var(--t) linear forwards; }
+
+    .veil {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      background-color: #000;
+      background-image: radial-gradient(circle at 50% 50%,
+        #ffffff 0%,
+        #ffffff 34%,
+        #fff4df 46%,
+        rgba(255, 255, 255, 0.2) 58%,
+        rgba(255, 255, 255, 0) 70%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 0% 0%;
+    }
+
+    body.play .veil { animation: blackToWhite 2.2s cubic-bezier(0.4, 0, 0.2, 1) 7.15s forwards; }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    @keyframes haloLeft {
+      0% { opacity: 0; transform: translateX(-42%) scale(0.86); }
+      14%, 20% { opacity: 0.95; transform: translateX(0) scale(1.12); }
+      42%, 100% { opacity: 0.7; transform: translateX(36%) scale(1.2); }
+    }
+
+    @keyframes haloRight {
+      0% { opacity: 0; transform: translateX(42%) scale(0.86); }
+      14%, 20% { opacity: 0.95; transform: translateX(0) scale(1.12); }
+      42%, 100% { opacity: 0.7; transform: translateX(-36%) scale(1.2); }
+    }
+
+    @keyframes leftFuse {
+      0% {
+        opacity: 0;
+        transform: translateX(-42%) scale(0.9);
+        filter: blur(10px);
+        animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+      }
+      14% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: none;
+      }
+      20% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: none;
+        animation-timing-function: cubic-bezier(0.55, 0.02, 0.2, 1);
+      }
+      42%, 100% {
+        opacity: 1;
+        transform: translateX(36%) scale(1);
+        filter: none;
+      }
+    }
+
+    @keyframes rightFuse {
+      0% {
+        opacity: 0;
+        transform: translateX(42%) scale(0.9);
+        filter: blur(10px);
+        mask-position: 100% 50%;
+        -webkit-mask-position: 100% 50%;
+        animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+      }
+      14% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: none;
+        mask-position: 100% 50%;
+        -webkit-mask-position: 100% 50%;
+      }
+      20% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: none;
+        mask-position: 100% 50%;
+        -webkit-mask-position: 100% 50%;
+        animation-timing-function: cubic-bezier(0.55, 0.02, 0.2, 1);
+      }
+      42%, 100% {
+        opacity: 1;
+        transform: translateX(-36%) scale(1);
+        filter: none;
+        mask-position: 0% 50%;
+        -webkit-mask-position: 0% 50%;
+      }
+    }
+
+    @keyframes sheen {
+      0%, 17% { opacity: 0; transform: translateX(-80%); }
+      23% { opacity: 1; transform: translateX(60%); }
+      34% { opacity: 0.8; transform: translateX(640%); }
+      42%, 100% { opacity: 0; transform: translateX(860%); }
+    }
+
+    @keyframes flare {
+      0%, 32% { opacity: 0; transform: translate(-50%, -50%) scale(0.45); }
+      42% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      54%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.55); }
+    }
+
+    @keyframes cover {
+      0%, 48% {
+        transform: scale(1);
+        filter: brightness(1);
+        animation-timing-function: cubic-bezier(0.66, 0, 0.18, 1);
+      }
+      70% {
+        transform: scale(var(--cover, 2.8));
+        filter: brightness(1);
+      }
+      78%, 100% {
+        transform: scale(var(--cover, 2.8));
+        filter: brightness(1.12);
+      }
+    }
+
+    @keyframes caption {
+      0%, 40% { opacity: 1; }
+      52%, 100% { opacity: 0; }
+    }
+
+    @keyframes grow {
+      0% { width: 0; }
+      42% { width: 100%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes vignette {
+      0%, 62% { opacity: 1; }
+      74%, 100% { opacity: 0; }
+    }
+
+    @keyframes blackToWhite {
+      0% { opacity: 0; background-size: 0% 0%; }
+      24% { opacity: 1; background-size: 12% 12%; }
+      100% { opacity: 1; background-size: 340% 340%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.play .zoom,
+      body.play .slot.left,
+      body.play .slot.right,
+      body.play .halo.gold,
+      body.play .halo.violet,
+      body.play .sheen,
+      body.play .flare,
+      body.play .caption,
+      body.play .fallback,
+      body.play .line b,
+      body.play::before {
+        animation: none;
+      }
+      .slot.left, .slot.right { opacity: 1; }
+      body.play .veil {
+        animation: none;
+        opacity: 1;
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <p class="sr" role="status">正在跳转到四川信息职业技术学院官网</p>
+  <div class="stage">
+    <div class="zoom" id="zoom">
+      <div class="halo gold" aria-hidden="true"></div>
+      <div class="halo violet" aria-hidden="true"></div>
+      <div class="slot left">
+        <img src="img/image%20copy.png" alt="奶龙">
+      </div>
+      <div class="slot right">
+        <img src="img/image.png" alt="四川信息职业技术学院校徽">
+      </div>
+      <div class="sheen" aria-hidden="true"></div>
+      <div class="flare" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="caption">
+    <span>正在前往</span>
+    <strong>四川信息职业技术学院</strong>
+    <i class="line" aria-hidden="true"><b></b></i>
+  </div>
+  <a class="fallback" href="https://www.scitc.edu.cn/">若未自动跳转，请点击进入官网</a>
+  <div class="veil" id="veil" aria-hidden="true"></div>
+  <noscript>
+    <p style="position:fixed;inset:0;display:grid;place-items:center;background:#fff;z-index:50;">
+      <a href="https://www.scitc.edu.cn/">进入四川信息职业技术学院</a>
+    </p>
+  </noscript>
+  <script>
+    (function () {
+      var TARGET = "https://www.scitc.edu.cn/";
+      var zoom = document.getElementById("zoom");
+      var veil = document.getElementById("veil");
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var started = false;
+      var left = false;
+
+      function go() {
+        if (left) return;
+        left = true;
+        window.location.replace(TARGET);
+      }
+
+      function coverScale() {
+        var ratio = 2.35;
+        var shift = 0.36 / ratio;
+        var contentWidth = zoom.offsetWidth * (1 - 2 * shift);
+        var contentHeight = zoom.offsetHeight;
+        if (!contentWidth || !contentHeight) return 3;
+        return Math.max(
+          window.innerWidth / contentWidth,
+          window.innerHeight / contentHeight
+        ) * 1.46;
+      }
+
+      function start() {
+        if (started) return;
+        started = true;
+        zoom.style.setProperty("--cover", coverScale().toFixed(3));
+        document.body.classList.add("play");
+        if (reduce) {
+          window.setTimeout(go, 400);
+          return;
+        }
+        veil.addEventListener("animationend", go);
+        window.setTimeout(go, 12000);
+      }
+
+      var imgs = Array.prototype.slice.call(document.images);
+      var ready = Promise.all(imgs.map(function (img) {
+        if (img.decode) return img.decode().catch(function () {});
+        return Promise.resolve();
+      }));
+
+      ready.then(function () {
+        window.requestAnimationFrame(start);
+      });
+      window.setTimeout(start, 2500);
+      window.setTimeout(go, 15000);
+    })();
+  </script>
+</body>
+</html>
